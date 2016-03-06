@@ -16,14 +16,34 @@
     </header>
     <ul id="todos" class="todos">
         <li class="todo">
-            <input id="checkbox_0" type="checkbox">
-            <label for="checkbox_0">Build, Run, Deploy</label>
+            <input id="checkbox_0" type="checkbox" onchange="onCheck('checkbox_0')">
+            <label id="lb_checkbox_0" for="checkbox_0">Build, Run, Deploy</label>
         </li>
     </ul>
 </section>
 <script>
+
+    function onCheck(event) {
+        var todo_cb = document.getElementById(event);
+        var todo_label = document.getElementById("lb_" + event);
+
+        console.log("checked = " + todo_cb.checked);
+
+        if (todo_cb.checked) {
+            todo_label.setAttribute("style", "text-decoration:line-through")
+        }
+        else {
+            todo_label.setAttribute("style", "text-decoration:none")
+        }
+        console.log(event);
+//        console.log(todo_label.text);
+//        console.log(todo_label.value);
+
+    }
+
     function getKey(event) {
         if (event.which == 13 || event.keyCode == 13) {
+
             var new_todo_input = document.getElementById("new-todo");
             var new_todo_value = new_todo_input.value;
 
@@ -34,15 +54,13 @@
             var todo_li_input = document.createElement("input");
             todo_li_input.setAttribute("type", "checkbox");
             todo_li_input.setAttribute("id", "checkbox_" + todos_count);
-//            var todo_li_input_att = document.createAttribute("type")
-//            todo_li_input_att.value = "checkbox";
-//            todo_li_input.setAttribute(todo_li_input_att);
+            todo_li_input.setAttribute("onchange", "onCheck('checkbox_" + todos_count + "')");
             var todo_li_label = document.createElement("label");
             todo_li_label.setAttribute("for", "checkbox_" + todos_count);
+            todo_li_label.setAttribute("id", "lb_checkbox_" + todos_count);
             var todo_li_label_txt = document.createTextNode(new_todo_value);
             todo_li_label.appendChild(todo_li_label_txt);
 
-//            var todo_li_txt = document.createTextNode(new_todo_value);
             todo_li.appendChild(todo_li_input);
             todo_li.appendChild(todo_li_label);
             todos.appendChild(todo_li);
