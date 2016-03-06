@@ -8,21 +8,53 @@
 </head>
 <body>
 
-    <section class="todoapp">
-        <header class="header">
-            <h1>Todos App Html + <a href="http://vanilla-js.com/">Js only</a> </h1>
-            <input class="new-todo" placeholder="What needs to be done?" autofocus="">
-        </header>
-        <ul class="todos">
-            <li>
-                <div class="todo">
-                    <input type="checkbox">
-                    <label>Build, Run, Deploy</label>
-                </div>
-            </li>
-        </ul>
-    </section>
-	<script>
-	</script>
+<section class="todoapp">
+    <header class="header">
+        <h1>Todos App Html + <a href="http://vanilla-js.com/">Js only</a></h1>
+        <input id="new-todo" class="new-todo" placeholder="What needs to be done?" onkeypress="return getKey(event)"
+               autofocus="true">
+    </header>
+    <ul id="todos" class="todos">
+        <li class="todo">
+            <input id="checkbox_0" type="checkbox">
+            <label for="checkbox_0">Build, Run, Deploy</label>
+        </li>
+    </ul>
+</section>
+<script>
+    function getKey(event) {
+        if (event.which == 13 || event.keyCode == 13) {
+            var new_todo_input = document.getElementById("new-todo");
+            var new_todo_value = new_todo_input.value;
+
+            var todos = document.getElementById("todos");
+
+
+            var todo_li = document.createElement("li");
+            var todo_li_input = document.createElement("input");
+            todo_li_input.setAttribute("type", "checkbox");
+            todo_li_input.setAttribute("id", "checkbox_1");
+//            var todo_li_input_att = document.createAttribute("type")
+//            todo_li_input_att.value = "checkbox";
+//            todo_li_input.setAttribute(todo_li_input_att);
+            var todo_li_label = document.createElement("label");
+            todo_li_label.setAttribute("for", "checkbox_1");
+            var todo_li_label_txt = document.createTextNode(new_todo_value);
+            todo_li_label.appendChild(todo_li_label_txt);
+
+//            var todo_li_txt = document.createTextNode(new_todo_value);
+            todo_li.appendChild(todo_li_input);
+            todo_li.appendChild(todo_li_label);
+            todos.appendChild(todo_li);
+
+            new_todo_input.value = "";
+//            alert(new_todo_value);
+
+        }
+
+
+    }
+
+</script>
 </body>
-</html>CCC
+</html>
