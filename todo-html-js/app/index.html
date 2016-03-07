@@ -5,12 +5,15 @@
     <title>Todo App Html JS</title>
     <!--<link rel="stylesheet" href="node_modules/todomvc-common/base.css">-->
     <!--<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">-->
+    <style>
+    </style>
 </head>
 <body>
 
 <section class="todoapp">
     <header class="header">
-        <h1>Todos App Html + <a href="http://vanilla-js.com/">Js only</a></h1>
+        <h1>Todos App Html + <a href="http://vanilla-js.com/" target="_blank" title="Also called Vanilla JS">Js only</a>
+        </h1>
         <input id="new-todo" class="new-todo" placeholder="What needs to be done?" onkeypress="return getKey(event)"
                autofocus="true">
     </header>
@@ -18,11 +21,22 @@
         <li class="todo">
             <input id="checkbox_0" type="checkbox" onchange="onCheck('checkbox_0')">
             <label id="lb_checkbox_0" for="checkbox_0">Build, Run, Deploy</label>
+            <button id="btn_checkbox_0" onclick="onDestroy('btn_0')" class="destroy-todo">x</button>
         </li>
     </ul>
 </section>
+
 <script>
 
+    //
+    // onloading : check todo in localStorage
+    // todoIndex : list todo from API, or from storage
+    // todoCreate : store in storage (+ by API : POST /todos {json_params} => return id)
+    // todoDestroy : destroy in storage (+by API : DELETE /todos/<id>)
+    // todoUpdate : for done task + by API : PUT /todos/<id> {json_params}
+    //
+
+    // When a todo is (un)checked
     function onCheck(event) {
         var todo_cb = document.getElementById(event);
         var todo_label = document.getElementById("lb_" + event);
@@ -38,39 +52,61 @@
         console.log(event);
 //        console.log(todo_label.text);
 //        console.log(todo_label.value);
+    }
+
+    // When destroy btn is hit
+    function onDestroy(event) {
+
+        var todo_btn = document.getElementById(event);
+
+        var parent = todo_btn.parentNode;
+        // you cant remove a node without his parent :( ... http://www.w3schools.com/js/js_htmldom_nodes.asp
+        parent.parentNode.removeChild(parent);
 
     }
 
+
+    // Create a todo
+    function todoCreate(new_todo_value) {
+        var todos = document.getElementById("todos");
+        var todos_count = todos.childElementCount;
+
+        var todo_li = document.createElement("li");
+        var todo_li_input = document.createElement("input");
+        todo_li_input.setAttribute("type", "checkbox");
+        todo_li_input.setAttribute("id", "checkbox_" + todos_count);
+        todo_li_input.setAttribute("onchange", "onCheck('checkbox_" + todos_count + "')");
+
+        var todo_li_label = document.createElement("label");
+        todo_li_label.setAttribute("for", "checkbox_" + todos_count);
+        todo_li_label.setAttribute("id", "lb_checkbox_" + todos_count);
+        var todo_li_label_txt = document.createTextNode(new_todo_value);
+        todo_li_label.appendChild(todo_li_label_txt);
+
+        var todo_li_btn = document.createElement("button");
+        todo_li_btn.setAttribute("id", "btn_" + todos_count);
+        todo_li_btn.setAttribute("onclick", "onDestroy('btn_" + todos_count + "')");
+        var todo_li_btn_txt = document.createTextNode("x");
+        todo_li_btn.appendChild(todo_li_btn_txt);
+
+        todo_li.appendChild(todo_li_input);
+        todo_li.appendChild(todo_li_label);
+        todo_li.appendChild(todo_li_btn);
+        todos.appendChild(todo_li);
+    }
+
+    // When a key is hit in input
     function getKey(event) {
         if (event.which == 13 || event.keyCode == 13) {
 
             var new_todo_input = document.getElementById("new-todo");
             var new_todo_value = new_todo_input.value;
 
-            var todos = document.getElementById("todos");
-            var todos_count = todos.childElementCount;
-
-            var todo_li = document.createElement("li");
-            var todo_li_input = document.createElement("input");
-            todo_li_input.setAttribute("type", "checkbox");
-            todo_li_input.setAttribute("id", "checkbox_" + todos_count);
-            todo_li_input.setAttribute("onchange", "onCheck('checkbox_" + todos_count + "')");
-            var todo_li_label = document.createElement("label");
-            todo_li_label.setAttribute("for", "checkbox_" + todos_count);
-            todo_li_label.setAttribute("id", "lb_checkbox_" + todos_count);
-            var todo_li_label_txt = document.createTextNode(new_todo_value);
-            todo_li_label.appendChild(todo_li_label_txt);
-
-            todo_li.appendChild(todo_li_input);
-            todo_li.appendChild(todo_li_label);
-            todos.appendChild(todo_li);
+            todoCreate(new_todo_value);
 
             new_todo_input.value = "";
 //            alert(new_todo_value);
-
         }
-
-
     }
 
 </script>
