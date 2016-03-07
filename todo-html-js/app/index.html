@@ -26,6 +26,8 @@
     </ul>
 </section>
 
+<script type="application/javascript" src="store.min.js"></script>
+
 <script>
 
     //
@@ -44,25 +46,14 @@
         console.log("checked = " + todo_cb.checked);
 
         if (todo_cb.checked) {
-            todo_label.setAttribute("style", "text-decoration:line-through")
+            todo_label.setAttribute("style", "text-decoration:line-through");
         }
         else {
-            todo_label.setAttribute("style", "text-decoration:none")
+            todo_label.setAttribute("style", "text-decoration:none");
         }
         console.log(event);
 //        console.log(todo_label.text);
 //        console.log(todo_label.value);
-    }
-
-    // When destroy btn is hit
-    function onDestroy(event) {
-
-        var todo_btn = document.getElementById(event);
-
-        var parent = todo_btn.parentNode;
-        // you cant remove a node without his parent :( ... http://www.w3schools.com/js/js_htmldom_nodes.asp
-        parent.parentNode.removeChild(parent);
-
     }
 
 
@@ -70,6 +61,11 @@
     function todoCreate(new_todo_value) {
         var todos = document.getElementById("todos");
         var todos_count = todos.childElementCount;
+
+        // Storage
+        store.set("todo_" + todos_count, {"id": "todo_" + todos_count, "body": new_todo_value});
+
+        // UI
 
         var todo_li = document.createElement("li");
         var todo_li_input = document.createElement("input");
@@ -95,7 +91,25 @@
         todos.appendChild(todo_li);
     }
 
-    // When a key is hit in input
+    // When destroy btn is hit
+    function onDestroy(event) {
+        var todo_btn = document.getElementById(event);
+
+        // Storage
+        var e = event.split("_");
+        var id = e[e.length - 1];
+        store.remove("todo_" + id);
+
+        // UI
+
+        var parent = todo_btn.parentNode;
+        // you cant remove a node without his parent :( ... http://www.w3schools.com/js/js_htmldom_nodes.asp
+        parent.parentNode.removeChild(parent);
+
+    }
+
+
+    // When a key is hit in input text
     function getKey(event) {
         if (event.which == 13 || event.keyCode == 13) {
 
@@ -108,6 +122,7 @@
 //            alert(new_todo_value);
         }
     }
+
 
 </script>
 </body>
